@@ -311,7 +311,7 @@ func HandleRecordStream(recordingCursor *pubsub.QueueCursor, configuration *mode
 				}
 
 				if timestamp+recordingPeriod-now < 0 || now-startRecording > maxRecordingPeriod {
-					log.Log.Info("HandleRecordStream: closing recording (timestamp: " + strconv.Itoa(timestamp) + ", recordingPeriod: " + strconv.Itoa(recordingPeriod) + ", now: " + strconv.FormatInt(now, 10) + ", startRecording: " + strconv.FormatInt(startRecording, 10) + ", maxRecordingPeriod: " + strconv.FormatInt(maxRecordingPeriod, 10))
+					log.Log.Info("HandleRecordStream: closing recording (timestamp: " + strconv.Itoa(timestamp) + ", recordingPeriod: " + strconv.Itoa(recordingPeriod) + ", now: " + strconv.Itoa(now) + ", startRecording: " + strconv.Itoa(startRecording) + ", maxRecordingPeriod: " + strconv.Itoa(maxRecordingPeriod))
 					break
 				}
 				if pkt.IsKeyFrame && start == false {
