@@ -51,7 +51,7 @@ type Capture struct {
 	Continuous            string      `json:"continuous,omitempty"`
 	PostRecording         int         `json:"postrecording"`
 	PreRecording          int         `json:"prerecording"`
-	MaxLengthRecording    int64       `json:"maxlengthrecording"`
+	MaxLengthRecording    int         `json:"maxlengthrecording"`
 	TranscodingWebRTC     string      `json:"transcodingwebrtc"`
 	TranscodingResolution int64       `json:"transcodingresolution"`
 	ForwardWebRTC         string      `json:"forwardwebrtc"`

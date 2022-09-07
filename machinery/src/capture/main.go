@@ -59,9 +59,9 @@ func HandleRecordStream(recordingCursor *pubsub.QueueCursor, configuration *mode
 	maxRecordingPeriod := config.Capture.MaxLengthRecording // maximum number of seconds to record.
 
 	// Synchronise the last synced time
-	now := time.Now().Unix()
-	startRecording := now
-	timestamp := now
+	now := int(time.Now().Unix())
+	startRecording := int(now)
+	timestamp := int(now)
 
 	// Check if continuous recording.
 	if config.Capture.Continuous == "true" {
@@ -70,8 +70,8 @@ func HandleRecordStream(recordingCursor *pubsub.QueueCursor, configuration *mode
 		log.Log.Info("HandleRecordStream: Start continuous recording ")
 
 		loc, _ := time.LoadLocation(config.Timezone)
-		now = time.Now().Unix()
-		timestamp = now
+		now = int(time.Now().Unix())
+		timestamp = int(now)
 		start := false
 		var name string
 		var myMuxer *mp4.Muxer
@@ -93,7 +93,7 @@ func HandleRecordStream(recordingCursor *pubsub.QueueCursor, configuration *mode
 
 			pkt, cursorError = recordingCursor.ReadPacket()
 
-			now := time.Now().Unix()
+			now := int(time.Now().Unix())
 
 			if start && // If already recording and current frame is a keyframe and we should stop recording
 				pkt.IsKeyFrame && (timestamp+recordingPeriod-now <= 0 || now-startRecording >= maxRecordingPeriod) {
@@ -167,8 +167,8 @@ func HandleRecordStream(recordingCursor *pubsub.QueueCursor, configuration *mode
 				// - Number of changes
 				// - Token
 
-				startRecording = time.Now().Unix() // we mark the current time when the record started.ss
-				s := strconv.FormatInt(startRecording, 10) + "_" +
+				startRecording = int(time.Now().Unix()) // we mark the current time when the record started.ss
+				s := strconv.Itoa(startRecording) + "_" +
 					"6" + "-" +
 					"967003" + "_" +
 					config.Name + "_" +
@@ -247,8 +247,8 @@ func HandleRecordStream(recordingCursor *pubsub.QueueCursor, configuration *mode
 
 		for motion := range communication.HandleMotion {
 
-			timestamp = time.Now().Unix()
-			startRecording = time.Now().Unix() // we mark the current time when the record started.
+			timestamp = int(time.Now().Unix())
+			startRecording = int(time.Now().Unix()) // we mark the current time when the record started.
 			numberOfChanges := motion.NumberOfChanges
 
 			// timestamp_microseconds_instanceName_regionCoordinates_numberOfChanges_token
@@ -260,7 +260,7 @@ func HandleRecordStream(recordingCursor *pubsub.QueueCursor, configuration *mode
 			// - Number of changes
 			// - Token
 
-			s := strconv.FormatInt(startRecording, 10) + "_" +
+			s := strconv.Itoa(startRecording) + "_" +
 				"6" + "-" +
 				"967003" + "_" +
 				config.Name + "_" +
@@ -300,10 +300,10 @@ func HandleRecordStream(recordingCursor *pubsub.QueueCursor, configuration *mode
 					log.Log.Error("HandleRecordStream: " + cursorError.Error())
 				}
 
-				now := time.Now().Unix()
+				now := int(time.Now().Unix())
 				select {
 				case motion := <-communication.HandleMotion:
-					timestamp = now
+					timestamp = int(now)
 					log.Log.Info("HandleRecordStream: motion detected while recording. Expanding recording.")
 					numberOfChanges = motion.NumberOfChanges
 					log.Log.Info("Received message with recording data, detected changes to save: " + strconv.Itoa(numberOfChanges))
@@ -311,7 +311,7 @@ func HandleRecordStream(recordingCursor *pubsub.QueueCursor, configuration *mode
 				}
 
 				if timestamp+recordingPeriod-now < 0 || now-startRecording > maxRecordingPeriod {
-					log.Log.Info("HandleRecordStream: closing recording (timestamp: " + strconv.FormatInt(timestamp, 10) + ", recordingPeriod: " + strconv.FormatInt(recordingPeriod, 10) + ", now: " + strconv.FormatInt(now, 10) + ", startRecording: " + strconv.FormatInt(startRecording, 10) + ", maxRecordingPeriod: " + strconv.FormatInt(maxRecordingPeriod, 10))
+					log.Log.Info("HandleRecordStream: closing recording (timestamp: " + strconv.Itoa(timestamp) + ", recordingPeriod: " + strconv.Itoa(recordingPeriod) + ", now: " + strconv.FormatInt(now, 10) + ", startRecording: " + strconv.FormatInt(startRecording, 10) + ", maxRecordingPeriod: " + strconv.FormatInt(maxRecordingPeriod, 10))
 					break
 				}
 				if pkt.IsKeyFrame && start == false {
